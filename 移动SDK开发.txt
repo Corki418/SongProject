@@ -1,7 +1,7 @@
-﻿1. mspeatest.pfx 商户的私钥，发送网关时候加签(signature字段)，参考SendHttp.java(里面用了同一个证书是不对的要注意!)
+1. mspeatest.pfx 商户的私钥，发送网关时候加签(signature字段)，参考SendHttp.java(里面用了同一个证书是不对的要注意!)
 2. srcbmsptest.cer 农商行的公钥，对网关返回的数据进行签名验证。处理可以参考MspGw.java(里面用了同一个证书是不对的要注意!)
 
-3. ReadPFX.java 读取证书程序，在programes目录下
+3. ReadPFX.java 证书程序，在programes目录下
 
 
 5. 2068000001  仿真平台测试商户编号，SDK传这个商户编号
