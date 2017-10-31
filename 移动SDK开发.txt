@@ -1,0 +1,118 @@
+﻿1. mspeatest.pfx 商户的私钥，发送网关时候加签(signature字段)，参考SendHttp.java(里面用了同一个证书是不对的要注意!)
+2. srcbmsptest.cer 农商行的公钥，对网关返回的数据进行签名验证。处理可以参考MspGw.java(里面用了同一个证书是不对的要注意!)
+
+3. ReadPFX.java 读取证书程序，在programes目录下
+
+
+5. 2068000001  仿真平台测试商户编号，SDK传这个商户编号
+
+6. 本次调用：二类账户余额查询接口，接口参数参见接口文档
+仿真服务的请求地址为: 公网访问接口：https://msptest.srcb.com:536/MspGw/geteway.do, 内网访问(https://http://10.20.158.134:8080/MspGw/geteway.do)
+查看网页： https://msptest.srcb.com:536/index.jsp
+
+公共参数
+2.3公共参数
+公共请求参数
+参数名	类型	是否必填	最大长度	描述	示例值
+serialno	String	是	36	商户交易流水号	2014072300007148
+ea_id	String	是	20	商户接入唯一id	0000345132
+biztype	String	是	1	业务类型（在每个接口说明中明确类型）	1：查询类
+2：业务类
+3：文本类
+method	String	是	128	调用平台接口名称	srcb.msp.ls.edu.schoolinfo.query
+version	String	是	10	调用平台接口版本	1.0.0
+format	String	是	20	报文格式，目前支持
+仅JSON	JSON
+charset	String	是	10	请求使用的编码格式，固定为utf-8	utf-8
+timestamp	String	是	18	发送请求的时间，格式"yyyy-MM-ddHH:mm:ss"	2014-07-2403:07:50
+device	String	是	100	设备码，web端可填写IP、MAC，移动端可填写IMEI码，如有多项用&符号连接	IP:10.20.151.211&MAC:aa-bb-cc-dd-ee-ff
+sign_type	String	是	10	商户生成签名字符串所使用的签名算法类型，目前仅支持RSA2	RSA2
+详见2.4签名验签
+signature	String	是	-	商户请求参数的签名字符串，最大长度不限。 	详见2.4签名验签
+
+公共响应参数
+参数	类型	是否必填	最大长度	描述	示例值
+reserialno	String	是	36	网关响应流水号	
+serialno	String	是	36	交易原流水号	2014072300007148
+retimestamp	String	是	19	响应请求的时间，格式"yyyy-MM-ddHH:mm:ss"	2017-03-0522:14:37
+code	String	是	6	网关响应码	000000
+msg	String	是	100	网关响应信息描述 	交易成功
+sub_code	String	否	50	业务返回码 	
+sub_msg	String	否	100	业务返回码信息描述 	
+sign_type	String	是	10	商户生成签名字符串所使用的签名算法类型，目前仅支持RSA2。签名类型字段放在http响应的headers域中返回。	RSA2
+详见2.4签名验签
+signature	String	否	-	平台返回参数的签名字符串，最大长度不限。签名字段放在http响应的headers域中返回。	详见2.4签名验签
+
+
+
+3.6二类账户余额查询接口
+3.6.1功能说明
+接口名：srcb.msp.acct.ssa.balance.query
+biztype：查询类
+根据上送的二类账户查询账户余额。
+3.6.2请求参数
+参数	类型	是否必填	最大长度	描述	备注
+custom_id	String 	否	16	客户编号	
+acno	String	是	32	II类账户	
+
+3.6.3响应参数
+参数	类型	必填	最大长度	描述	备注
+avail_bal	String	是	15,2	可用余额	
+
+3.6.4错误码
+错误码
+（sub_code）	错误描述
+(sub_msg)	备注
+ea.eaat.invalid-para	参数有误，请输入正确{para}参数	
+ea.eaat.not-found	未查询数据	
+ea.eaat.unknown-error	系统异常	
+
+
+如：
+POST 方式
+url: 
+https://msptest.srcb.com:536/MspGw/geteway.do?version=1.0.0&method=srcb.msp.acct.ssa.balance.query&ea_id=2068000001&serialno=1234567890&biztype=1&format=JSON&charset=UTF-8&timestamp=2017-08-3115:12:31&sign_type=RSA2&signature=xxxxxxxxxxxxxxxxxxxxx
+
+内容:
+{"custom_id":"c12324545","acno":"acc11231243"}
+
+
+返回数据：正常
+{	
+    "msp_response_head":{
+        "reserialno": "2014112611001004680073956707",
+        "serialno": "02110R3130720CO130720012761457200000",
+        "retimestamp":"2015-06-01 08:08:08",
+        "code":"000000",
+        "msg":"服务调用成功"
+    }
+    "msp_response_body":{
+        "avail_bal": "1234567890123.45"
+    }
+}
+
+返回数据：错误(没有msp_response_body)
+{
+    "msp_response_head":{
+        "code":"100000"
+        "msg":"服务不可用",
+        "sub_code":"api.unknown_error",
+        "sub_msg":"服务暂不可用",
+        "retimestamp":"2017-08-11 17:22:23",
+        "serialno":"M04172411000001547",
+	}
+}
+
+
+
+
+
+
+		  
+
+		  
+
+
+
+
+
